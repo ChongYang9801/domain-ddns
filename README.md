@@ -26,6 +26,7 @@ config:
       # 多个域名配置
       domains:
         - domain: example1.com
+          # 子域名，不配置则只更新主域名
           subDomain: dev
           # 域名解析的更新间隔时间，单位：分。非必填，默认为10分钟
           interval: 120
