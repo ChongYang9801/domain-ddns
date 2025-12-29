@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: ddns
+
+config:
+  # accessKeyId 和 accessKeySecret 是否加密
+  encryption: true
+  DomainNameServiceConfig:
+    # 支持多账号，并且一组密钥对可以管理多个域名
+    - accessKeyId: OzQ8QAmfV1Vx0VLRfqx+tIWo+jb
+      accessKeySecret: /XROc3a3Ffesp0O05iFVnvfYOcZiM
+      # 域名解析服务提供商类型
+      domainNameServiceProviderType: aliyun
+      # 多个域名配置
+      domains:
+        - domain: example1.com
+          subDomain: dev
+          # 域名解析的更新间隔时间，单位：分,非必填，默认为10分钟
+          interval: 120
