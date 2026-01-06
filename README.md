@@ -17,6 +17,8 @@ config:
   # 另外，加密是基于网卡MAC地址，一旦选择加密，就只能在同一台机器上进行解密
   # 具体加解密方式参见：com.onon.ddns.util.CryptoUtil
   encryption: true
+  # 指定网卡的mac地址，用于复杂网络环境下，程序可能获取不到正确的网卡，因此可以手动指定,非必填。
+  fixedNetworkCardMacAddress: 00-00-00-00-00-0
   DomainNameServiceConfig:
     # 支持多账号，并且一组密钥对可以管理多个域名
     - accessKeyId: OzQ8QAmfV1Vx0VLRfqx+tIWo+jb
@@ -36,6 +38,14 @@ config:
 
 目前已经完成阿里云动态域名解析，如果你只使用阿里云进行解析，那么可以直接使用，配置对应的密钥即可。
 
-如需扩展，可以根据查看`StartTask`类来自行扩展
+如需扩展，可以根据查看`StartTask`类代码走向来自行扩展
+
+如果不需要graalvm插件，请在pom文件中将如下内容注释或删除
+```xml
+<plugin>
+    <groupId>org.graalvm.buildtools</groupId>
+    <artifactId>native-maven-plugin</artifactId>
+</plugin>
+```
 
 # 最后，代码水平有限，设计模式用的也不多，肯定存在诸多不适之处，望各位大佬指正
