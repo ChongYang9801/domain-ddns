@@ -36,18 +36,30 @@ public class HardwareAddressUtil {
             InetAddress inetAddress = addressList.get(0);
             try {
                 NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
-                byte[] mac = networkInterface.getHardwareAddress();
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < mac.length; i++) {
-                    sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-                }
-                MAC_ADDRESS = sb.toString();
-                return sb.toString();
+                String mac = byteToStr(networkInterface.getHardwareAddress());
+                MAC_ADDRESS = mac;
+                return mac;
             } catch (SocketException e) {
                 log.error("获取mac异常，错误信息：{}", e.getMessage());
             }
         }
         return "";
+    }
+
+    /**
+     * byte数组转换成mac地址
+     *
+     * @param mac byte数组
+     * @return mac地址
+     */
+    public static String byteToStr(byte[] mac) {
+        StringBuilder sb = new StringBuilder();
+        if (mac != null) {
+            for (int i = 0; i < mac.length; i++) {
+                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+            }
+        }
+        return sb.toString();
     }
 
 }

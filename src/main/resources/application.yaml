@@ -1,10 +1,14 @@
 spring:
   application:
     name: ddns
+  native:
+    mode: build
 
 config:
   # accessKeyId 和 accessKeySecret 是否加密
   encryption: true
+  # 指定网卡的mac地址，用于复杂网络环境下，程序可能获取不到正确的网卡，因此可以手动指定,非必填。
+  fixedNetworkCardMacAddress: 00-00-00-00-00-0
   DomainNameServiceConfig:
     # 支持多账号，并且一组密钥对可以管理多个域名
     - accessKeyId: OzQ8QAmfV1Vx0VLRfqx+tIWo+jb

@@ -1,11 +1,13 @@
 package com.onon.ddns.util;
 
 
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
+import com.onon.ddns.config.DdnsConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -24,11 +26,21 @@ public class RealIPUtil {
      */
     public static List<InetAddress> getRealIP() {
         List<InetAddress> inetAddressList = new ArrayList<>();
+        // 获取配置
+        DdnsConfig ddnsConfig = SpringBeanUtils.getBean(DdnsConfig.class);
         try {
             // 获取到所有的网卡
-            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
-            while (allNetInterfaces.hasMoreElements()) {
-                NetworkInterface netInterface = allNetInterfaces.nextElement();
+            List<NetworkInterface> networkInterfaceList = NetworkInterface.networkInterfaces().toList();
+            for (NetworkInterface netInterface : networkInterfaceList) {
+                if (StrUtil.isNotBlank(ddnsConfig.getFixedNetworkCardMacAddress())) {
+                    // 筛选用户指定的网卡
+                    if (ddnsConfig.getFixedNetworkCardMacAddress()
+                            .equalsIgnoreCase(HardwareAddressUtil.byteToStr(netInterface.getHardwareAddress()))) {
+                        netInterface.inetAddresses().filter(ObjUtil::isNotNull)
+                                .forEach(inetAddressList::add);
+                    }
+                    continue;
+                }
                 // 去除回环接口127.0.0.1，子接口，未运行的接口
                 if (netInterface.isLoopback() || netInterface.isVirtual() || !netInterface.isUp()) {
                     continue;
@@ -40,14 +52,12 @@ public class RealIPUtil {
                         && !netInterface.getDisplayName().contains("Broadcom")) {
                     continue;
                 }
-                Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    InetAddress ip = addresses.nextElement();
+                List<InetAddress> addresses = netInterface.inetAddresses().toList();
+                for (InetAddress ip : addresses) {
                     if (ip != null) {
                         inetAddressList.add(ip);
                     }
                 }
-                break;
             }
         } catch (SocketException e) {
             log.error("获取ip异常，错误信息：{}", e.getMessage());

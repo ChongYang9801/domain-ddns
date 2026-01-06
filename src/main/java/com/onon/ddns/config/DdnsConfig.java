@@ -31,6 +31,8 @@ public class DdnsConfig {
     // 域名解析服务提供商类型
     private String domainNameServiceProviderType;
 
+    private String fixedNetworkCardMacAddress;
+
     // 域名解析服务提供商配置
     private List<DomainNameServiceConfig> domainNameServiceConfig;
 
